@@ -19,19 +19,22 @@ function setTable(){
 function downblock(){
     let block1;
     let block2;
-    for(let i=1;i<29;i++){
+    var i=0;
 
-        setTimeout(() => {
-            console.log(String(i)+" 10");
-            block1 = document.getElementById(String(i-1)+" 10");
-            if(i!=1){
-                block1.style.background="black";
+        var it=setInterval(() => {
+            if(i++<28){
+                console.log(String(i)+" 10");
+                    block1 = document.getElementById(String(i-1)+" 10");
+                    if(i!=1){
+                        block1.style.background="black";
+                    }
+                    block2 = document.getElementById(String(i)+" 10");
+                    block2.style.background="white";
+            }else{
+                clearInterval(it);
+                Module.it();
             }
-            block2 = document.getElementById(String(i)+" 10");
-            block2.style.background="white";
-            
-        }, 500*i);
-    } 
+        }, 100);
     
 }
 (function(){
