@@ -16,11 +16,25 @@ function setTable(){
 
     document.write(table);
 }
-function fallblock(){
-    let block = document.getElementById("1 10");
-    block.style.background="white";
+function downblock(){
+    let block1;
+    let block2;
+    for(let i=1;i<29;i++){
+
+        setTimeout(() => {
+            console.log(String(i)+" 10");
+            block1 = document.getElementById(String(i-1)+" 10");
+            if(i!=1){
+                block1.style.background="black";
+            }
+            block2 = document.getElementById(String(i)+" 10");
+            block2.style.background="white";
+            
+        }, 500*i);
+    } 
+    
 }
 (function(){
     setTable();
-    fallblock();
+    downblock();
 })()
