@@ -43,8 +43,10 @@ td{
     float: right;
     margin: 0px;
     position: absolute;
-    left: 402px;
-    top: 358px;
+    /* left: 402px; */
+    /* top: 358px; */
+    left : 445px;
+    top : 360px;
 }
 #help{
     font-size: 18px;
