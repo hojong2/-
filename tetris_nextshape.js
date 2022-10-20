@@ -1,24 +1,24 @@
 //전역변수
 const blockArray = [
     [[2,2],[1,2],[1,1],[0,1]],
-    [[1,1],[1,0],[0,2],[0,1]],
-    [[2,1],[1,1],[1,2],[0,2]],
-    [[1,2],[1,1],[0,1],[0,0]],
-    [[1,2],[1,1],[0,2],[0,1]],
-    [[2,0],[1,1],[1,0],[0,0]],
-    [[1,1],[0,2],[0,1],[0,0]],
-    [[2,2],[1,2],[1,1],[0,2]],
-    [[1,2],[1,1],[1,0],[0,1]],
-    [[3,1],[2,1],[1,1],[0,1]],
-    [[1,3],[1,2],[1,1],[1,0]],
-    [[2,2],[2,1],[1,1],[0,1]],
-    [[1,0],[0,2],[0,1],[0,0]],
-    [[2,2],[1,2],[0,2],[0,1]],
-    [[1,2],[1,1],[1,0],[0,2]],
-    [[2,2],[2,1],[1,2],[0,2]],
-    [[2,2],[2,1],[2,0],[1,0]],
-    [[2,1],[1,1],[0,1],[0,2]],
-    [[1,2],[0,2],[0,1],[0,0]]
+    // [[1,1],[1,0],[0,2],[0,1]],
+    // [[2,1],[1,1],[1,2],[0,2]],
+    // [[1,2],[1,1],[0,1],[0,0]],
+    // [[1,2],[1,1],[0,2],[0,1]],
+    // [[2,0],[1,1],[1,0],[0,0]],
+    // [[1,1],[0,2],[0,1],[0,0]],
+    // [[2,2],[1,2],[1,1],[0,2]],
+    // [[1,2],[1,1],[1,0],[0,1]],
+    // [[3,1],[2,1],[1,1],[0,1]],
+    // [[1,3],[1,2],[1,1],[1,0]],
+    // [[2,2],[2,1],[1,1],[0,1]],
+    // [[1,0],[0,2],[0,1],[0,0]],
+    // [[2,2],[1,2],[0,2],[0,1]],
+    // [[1,2],[1,1],[1,0],[0,2]],
+    // [[2,2],[2,1],[1,2],[0,2]],
+    // [[2,2],[2,1],[2,0],[1,0]],
+    // [[2,1],[1,1],[0,1],[0,2]],
+    // [[1,2],[0,2],[0,1],[0,0]]
 ];
 
 let nextBlock = parseInt(Math.random() * blockArray.length); //도형 모양 랜덤으로 생성
@@ -85,6 +85,7 @@ function init(){
     console.log('init실행');
     displaycurrentBlock();
     displayNextBlock();
+    // move();
     downblock();
     // setTimeout(() => {
     //     init()
@@ -100,6 +101,14 @@ function displayNextBlock(){
         let x = block[i][1];
         document.getElementById(String(y)+String(x)).style.background = 'tomato';
     }
+}
+function moveDown(){
+    resetBlock();
+    blockPoint=[1];
+    for(let a=0;a<blockCell.length;a++){
+        blockCell[a][0]+=blockPoint[0];
+    }
+    showShape();
 }
 //현재 도형 그리기
 function displaycurrentBlock(){
@@ -130,47 +139,46 @@ function downblock(){
     // let block2;
     let i=0;
     let  nextLine;
-    let check=false;
+    let isTouch=false;
     console.log(nextLine);
     let it=setInterval(() => {
         if(i++<26){
                 let mine=[];
-                console.log(String(i)+" 10"); 
-                console.log(blockCell); //블록의 위치 좌표 배열
                     // block1 = document.getElementById(String(i-1)+" 10");
                     // if(i!=1){ //블록의 위치좌표는 0로 시작하지 않아서 
                     //     block1.style.background="black";
                     // }
                     // block2 = document.getElementById(String(i)+" 10");
                     // block2.style.background="white";
-                    if(check){i+=100;return;}
-     
-                    for(let h=0;h<blockCell.length;h++){ // blockcell의 length란 4로 블록 각각의 td 위치를 의미함 
-                        let currentBlock = gebi(blockCell[h][0]+i,blockCell[h][1]); //현재 블록의 위치 td값
-                        mine.push(currentBlock);
-                        console.log('td 값 :', mine);
-                        let beforeBlock = gebi(blockCell[h][0]+i-1,blockCell[h][1]); //이전 블록의 위치
-                        nextLine = gebi(blockCell[h][0]+i+1,blockCell[h][1]); //그좌표의 바로밑 td값
-                        currentBlock.style.background = 'tomato';
-                        beforeBlock.style.background='black';
-                        if( nextLine.style.background !=='black' && blockCell[0][0] === blockCell[h][0]){ //제일 아랫칸 불럭이 만날때
-                            console.log('멈춤');
-                            check=true;
-                            // if(mine[1]===nextLine)check=false;
-                            // if(mine[2]===nextLine)check=false;
-                            // if(mine[3]===nextLine)check=false;
-                            
-                        }
-                        
+                    if(isTouch){
+                        console.log('멈춤');
+                        i+=100;return;
                     }
-                    console.log(i)
+                    moveDown();
+     
+                    // for(let h=0;h<blockCell.length;h++){ // blockcell의 length란 4로 블록 각각의 td 위치를 의미함 
+                    //     let currentBlock = gebi(blockCell[h][0]+i,blockCell[h][1]); //현재 블록의 위치 td값
+                    //     mine.push(currentBlock);
+                    //     let beforeBlock = gebi(blockCell[h][0]+i-1,blockCell[h][1]); //이전 블록의 위치
+                    //     nextLine = gebi(blockCell[h][0]+i+1,blockCell[h][1]); //그좌표의 바로밑 td값
+                        
+                    //     // currentBlock.style.background = 'tomato';
+                    //     // beforeBlock.style.background='black';
+                        
+                    //     if((nextLine!==mine[0]) && (nextLine!==mine[1]) && (nextLine!==mine[2]) && (nextLine!==mine[3])){ //다음블럭이  내블럭이 아니고
+                    //         if( nextLine.style.background !=='black'){ //다음블럭이 존재할때
+                    //         isTouch=true; //멈춤
+                    //         } 
+                    //     }
+                    // }
+                    
 
             }else{
                 clearInterval(it);
                 blockCell=[];
                 init();
             }
-        }, 100);
+        }, 300);
     
 }
 (function(){
