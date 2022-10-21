@@ -1,7 +1,6 @@
 //전역변수
 const blockArray = [
-    [[2,0],[2,1],[2,2],[2,3]]
-    // [[2, 2], [1, 2], [1, 1], [0, 1]],
+    [[2, 2], [1, 2], [1, 1], [0, 1]],
     // [[1,1],[1,0],[0,2],[0,1]],
     // [[2,1],[1,1],[1,2],[0,2]],
     // [[1,2],[1,1],[0,1],[0,0]],
@@ -50,31 +49,7 @@ function setTable() {
 
     document.write(table);
 }
-//한줄이 꽉참 감지
-function checkLine(){
-    let check=0;
-    for(var i=1; i<29; i++){
-        for(var j=1; j<19; j++){
-            if(document.getElementById(`${i} ${j}`).style.background == 'tomato'){
-                check+=1;
-            }
-            console.log(check);
-        }
-        if(check==18){
-            lineClear(i);
-        }
-        check=0;
-    }
-}
 
-//한줄이 꽉차면 한줄 삭제
-function lineClear(line){
-    //[28,1-18]
-    for(var i=1; i<19; i++){
-        document.getElementById(`${line} ${i}`).style.background = 'black';
-    }
-
-}
 
 // 게임테이블 좌표 반환
 function gebi(y, x) {
@@ -187,7 +162,6 @@ function init() {
     displayNextBlock();
     // move();
     downblock();
-    checkLine();
     // setTimeout(() => {
     //     init()
     // }, 3000);
@@ -291,7 +265,7 @@ function downblock() {
             blockCell = [];
             init();
         }
-    }, 100);
+    }, 300);
 
 
 }

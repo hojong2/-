@@ -1,24 +1,24 @@
 //전역변수
 const blockArray = [
     [[2, 2], [1, 2], [1, 1], [0, 1]],
-    // [[1,1],[1,0],[0,2],[0,1]],
-    // [[2,1],[1,1],[1,2],[0,2]],
-    // [[1,2],[1,1],[0,1],[0,0]],
-    // [[1,2],[1,1],[0,2],[0,1]],
-    // [[2,0],[1,1],[1,0],[0,0]],
-    // [[1,1],[0,2],[0,1],[0,0]],
-    // [[2,2],[1,2],[1,1],[0,2]],
-    // [[1,2],[1,1],[1,0],[0,1]],
-    // [[3,1],[2,1],[1,1],[0,1]],
-    // [[1,3],[1,2],[1,1],[1,0]],
-    // [[2,2],[2,1],[1,1],[0,1]],
-    // [[1,0],[0,2],[0,1],[0,0]],
-    // [[2,2],[1,2],[0,2],[0,1]],
-    // [[1,2],[1,1],[1,0],[0,2]],
-    // [[2,2],[2,1],[1,2],[0,2]],
-    // [[2,2],[2,1],[2,0],[1,0]],
-    // [[2,1],[1,1],[0,1],[0,2]],
-    // [[1,2],[0,2],[0,1],[0,0]]
+    [[1,1],[1,0],[0,2],[0,1]],
+    [[2,1],[1,1],[1,2],[0,2]],
+    [[1,2],[1,1],[0,1],[0,0]],
+    [[1,2],[1,1],[0,2],[0,1]],
+    [[2,0],[1,1],[1,0],[0,0]],
+    [[1,1],[0,2],[0,1],[0,0]],
+    [[2,2],[1,2],[1,1],[0,2]],
+    [[1,2],[1,1],[1,0],[0,1]],
+    [[3,1],[2,1],[1,1],[0,1]],
+    [[1,3],[1,2],[1,1],[1,0]],
+    [[2,2],[2,1],[1,1],[0,1]],
+    [[1,0],[0,2],[0,1],[0,0]],
+    [[2,2],[1,2],[0,2],[0,1]],
+    [[1,2],[1,1],[1,0],[0,2]],
+    [[2,2],[2,1],[1,2],[0,2]],
+    [[2,2],[2,1],[2,0],[1,0]],
+    [[2,1],[1,1],[0,1],[0,2]],
+    [[1,2],[0,2],[0,1],[0,0]]
 ];
 
 let nextBlock = parseInt(Math.random() * blockArray.length); //도형 모양 랜덤으로 생성
@@ -27,6 +27,9 @@ let blockPoint = [1, 1]; //도형위치가 게임테이블 어디에 있는지 �
 let createPoint = [1, parseInt(22 / 2) - 2]; //게임테이블에 어디서 도형을 만들지 보여주는 배열(default 1 9에서 만듬)
 let blockCell = []; //currentShape초기화 하기위해 만든 것
 let time = 0;
+// let fast = 300;
+
+let it = null;
 
 
 //게임테이블 그리기
@@ -74,6 +77,8 @@ function keyDownEventHandler(e) {
             break;
 
         case 32: setTimeout("moveFS(1)", 0);
+            clearInterval(it);
+            downblock(10);
             resetBlock(-1);
             movefast = true;
             break;
@@ -101,14 +106,19 @@ function moveLR(delta) {
     for (let h = 0; h < blockCell.length; h++) { // blockcell의 length란 4로 블록 각각의 td 위치를 의미함 
         blockCell[h][1] += delta;
     }
+
+    showShape();
 }
 
 
 function moveFS(delta) {
-
+    fast = 10;
     for (let h = 0; h < blockCell.length; h++) {
         blockCell[h][0] += delta;
     }
+
+    showShape();
+
 } 
 
 
@@ -154,12 +164,15 @@ function moveDown() {
 }
 
 
+
+
 //시작
 function init() {
     currentBlock = '';
     console.log('init실행');
     displaycurrentBlock();
     displayNextBlock();
+    this.currentBlock = null;
     // move();
     downblock();
     // setTimeout(() => {
@@ -218,57 +231,36 @@ function resetNextBlock() {
 }
 
 
-function downblock() {
+function downblock(fast=300) {
+
     // let block1;
     // let block2;
     let i = 0;
     let nextLine;
     let isTouch = false;
     console.log(nextLine);
-    let it = setInterval(() => {
+    
+
+    it = setInterval(() => {
         if (i++ < 25) {
             let mine = [];
-            // block1 = document.getElementById(String(i-1)+" 10");
-            // if(i!=1){ //블록의 위치좌표는 0로 시작하지 않아서 
-            //     block1.style.background="black";
-            // }
-            // block2 = document.getElementById(String(i)+" 10");
-            // block2.style.background="white";
+
             if (isTouch) {
                 console.log('멈춤');
                 i += 100; return;
             }
 
-
             moveDown();
-
-
-            // for(let h=0;h<blockCell.length;h++){ // blockcell의 length란 4로 블록 각각의 td 위치를 의미함 
-            //     let currentBlock = gebi(blockCell[h][0]+i,blockCell[h][1]); //현재 블록의 위치 td값
-            //     mine.push(currentBlock);
-            //     let beforeBlock = gebi(blockCell[h][0]+i-1,blockCell[h][1]); //이전 블록의 위치
-            //     nextLine = gebi(blockCell[h][0]+i+1,blockCell[h][1]); //그좌표의 바로밑 td값
-
-            //     // currentBlock.style.background = 'tomato';
-            //     // beforeBlock.style.background='black';
-
-            //     if((nextLine!==mine[0]) && (nextLine!==mine[1]) && (nextLine!==mine[2]) && (nextLine!==mine[3])){ //다음블럭이  내블럭이 아니고
-            //         if( nextLine.style.background !=='black'){ //다음블럭이 존재할때
-            //         isTouch=true; //멈춤
-            //         } 
-            //     }
-            // }
-
 
         } else {
             clearInterval(it);
             blockCell = [];
             init();
+
         }
-    }, 300);
-
-
+    }, fast);
 }
+
 (function () {
     setTable();
     init();

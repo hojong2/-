@@ -109,7 +109,7 @@ function moveDown(){
     showShape();
     setTimeout(() => {
         moveDown();
-    }, 100);
+    }, 500);
 }
 //시작
 function init(){
