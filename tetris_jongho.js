@@ -28,7 +28,7 @@ let blockPoint = [1, 1]; //도형위치가 게임테이블 어디에 있는지 �
 let createPoint = [1, parseInt(22 / 2) - 2]; //게임테이블에 어디서 도형을 만들지 보여주는 배열(default 1 9에서 만듬)
 let blockCell = []; //currentShape초기화 하기위해 만든 것
 let time = 0;
-
+let score = 0;
 
 //게임테이블 그리기
 function setTable() {
@@ -58,7 +58,7 @@ function checkLine(){
             if(document.getElementById(`${i} ${j}`).style.background == 'tomato'){
                 check+=1;
             }
-            console.log(check);
+            // console.log(check);
         }
         if(check==18){
             lineClear(i);
@@ -73,7 +73,13 @@ function lineClear(line){
     for(var i=1; i<19; i++){
         document.getElementById(`${line} ${i}`).style.background = 'black';
     }
+    score+=100;
 
+}
+
+//스코어 관리
+function scoreManager(){
+    document.getElementById("score").textContent = score;
 }
 
 // 게임테이블 좌표 반환
@@ -188,6 +194,7 @@ function init() {
     // move();
     downblock();
     checkLine();
+    scoreManager();
     // setTimeout(() => {
     //     init()
     // }, 3000);
