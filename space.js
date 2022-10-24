@@ -231,7 +231,7 @@ function resetNextBlock() {
 }
 
 
-function downblock(fast=300) {
+function downblock(fast) {
 
     // let block1;
     // let block2;
