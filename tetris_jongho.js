@@ -250,6 +250,27 @@ function resetNextBlock() {
             document.getElementById(String(i) + String(j)).style.background = "rgb(14,31,49)";
 }
 
+//
+function isCanMove(){
+    let isTouch=false;
+    let mine=[];
+    for(let h=0;h<blockCell.length;h++){ // blockcell의 length란 4로 블록 각각의 td 위치를 의미함 
+        let currentBlock = gebi(blockCell[h][0],blockCell[h][1]); //현재 블록의 위치 td값
+        mine.push(currentBlock);
+        let nextLine = gebi(blockCell[h][0]+1,blockCell[h][1]); //그좌표의 바로밑 td값
+        // console.log('mine td',h,mine[h]);
+        // console.log('next line td' ,nextLine);
+        
+        if((nextLine!==mine[0]) && (nextLine!==mine[1]) && (nextLine!==mine[2]) && (nextLine!==mine[3])){ //다음블럭이  내블럭이 아니고
+            if( nextLine.style.background !=='black'){ //다음블럭이 존재할때
+                // console.log('멈춤');
+            isTouch=true; //멈춤
+            } 
+        }
+    }
+    return isTouch;
+}
+
 
 function downblock() {
     // let block1;
@@ -274,6 +295,7 @@ function downblock() {
 
 
             moveDown();
+            isTouch=isCanMove();
 
 
             // for(let h=0;h<blockCell.length;h++){ // blockcell의 length란 4로 블록 각각의 td 위치를 의미함 
