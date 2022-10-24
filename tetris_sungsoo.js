@@ -26,10 +26,10 @@ let nextBlock = parseInt(Math.random() * blockArray.length); //도형 모양 랜
 let currentBlock = nextBlock; //제일 처음 도형이 어떤것인지 알려주는 것 초기화
 let blockPoint = [1, 1]; //도형위치가 게임테이블 어디에 있는지 알려주는 배열 
 let createPoint = [1, parseInt(22 / 2) - 2]; //게임테이블에 어디서 도형을 만들지 보여주는 배열(default 1 9에서 만듬)
-let blockCell = []; //currentShape초기화 하기위해 만든 것
+let blockCell = []; //block에 모초기화 하기위해 만든 것
 let time = 0;
 let score = 0;
-let shapeRotateMap = [1,0,3,2,4,6,7,8,5,10,9,12,13,14,11,16,17,18,15];
+let blockRotateMap = [1,0,3,2,4,6,7,8,5,10,9,12,13,14,11,16,17,18,15];
 let isGameOver=false;
 function message(){
     alert('GameOver YourScore is '+score);
@@ -40,7 +40,6 @@ function message(){
 function gameOver(){
     if(isCanMove()){
         isGameOver=true;
-        // console.log('gameOver');
     }
 }
 //게임테이블 그리기
@@ -66,12 +65,11 @@ function setTable() {
 //한줄이 꽉참 감지
 function checkLine(){
     let check=0;
-    for(var i=1; i<29; i++){
-        for(var j=1; j<19; j++){
+    for(let i=1; i<29; i++){
+        for(let j=1; j<19; j++){
             if(document.getElementById(`${i} ${j}`).style.background == 'tomato'){
                 check+=1;
             }
-            // console.log(check);
         }
         if(check==18){
             lineClear(i);
@@ -83,7 +81,7 @@ function checkLine(){
 //한줄이 꽉차면 한줄 삭제
 function lineClear(line){
     //[28,1-18]
-    for(var i=1; i<19; i++){
+    for(let i=1; i<19; i++){
         document.getElementById(`${line} ${i}`).style.background = 'black';
     }
     score+=100;
@@ -94,7 +92,7 @@ function lineClear(line){
 function lineDown(line){
     // console.log(line);
     for(i=line; i>5; i--){
-        for(var j=1; j<19; j++){
+        for(let j=1; j<19; j++){
             let before=document.getElementById(`${(i-1)} ${j}`).style.background;
             // console.log(before);
             document.getElementById(`${i} ${j}`).style.background = before;
@@ -128,13 +126,12 @@ function keyDownEventHandler(e) {
         case 39: setTimeout("moveLR(1)", 0);
             moveright = true;
             break;
-            
-            case 32: setTimeout("moveFS(1)", 0);
+
+        case 32: setTimeout("moveFS(1)", 0);
             movefast = true;
             break;
-            
-            case 13: setTimeout("rotateShape()", 0);
-            // console.log('enter 입력')
+
+        case 13: setTimeout("rotateBlock()", 0);
             break;
 
     }
@@ -166,7 +163,7 @@ function moveLR(delta) {
         }else{
             blockPoint[1]--;
         }
-        showShape();
+        showBlock();
     }
 
 }
@@ -180,26 +177,25 @@ function moveFS(delta) {
             blockCell[h][0] += delta;
         }
         blockPoint[0]++;
-        showShape();
+        showBlock();
     }
 
 } 
 
-function rotateShape(){
+function rotateBlock(){
+    
     resetBlock();
-    // console.log('here');
     blockCell=[];
-    currentBlock = shapeRotateMap[currentBlock];
-    var rotatedShape = blockArray[currentBlock];
-    for(var i=0;i<4;i++){
-        var sy = blockPoint[0] + rotatedShape[i][0];
-        var sx = blockPoint[1] + rotatedShape[i][1];
+    currentBlock = blockRotateMap[currentBlock];
+
+    let rotatedBlock = blockArray[currentBlock];
+    for(let i=0;i<4;i++){
+        let sy = blockPoint[0] + rotatedBlock[i][0];
+        let sx = blockPoint[1] + rotatedBlock[i][1];
         // console.log(blockPoint[0],blockPoint[1]);
         blockCell.push([sy,sx]);
     }
-    // console.log('here3');
-    showShape();
-    // console.log('here4');
+    showBlock();
 }
 
 
@@ -221,7 +217,7 @@ function resetBlock() {
 }
 
 
-function showShape() {
+function showBlock() {
     for (let i = 0; i < blockCell.length; i++) {
         let el = gebi(blockCell[i][0], blockCell[i][1]);
         el.style.background = 'tomato';
@@ -261,7 +257,7 @@ function moveDown() {
         blockCell[a][0]++;
     }
     blockPoint[0]++;
-    showShape();
+    showBlock();
 }
 
 
@@ -281,7 +277,6 @@ function displaycurrentBlock() {
         el.style.background = 'tomato';
         blockCell.push([sy, sx]);
     }
-    // console.log('여기')
 }
 
 
@@ -305,7 +300,6 @@ function isCanMove(){
         
         if((nextLine!==mine[0]) && (nextLine!==mine[1]) && (nextLine!==mine[2]) && (nextLine!==mine[3])){ //다음블럭이  내블럭이 아니고
             if( nextLine.style.background !=='black'){ //다음블럭이 존재할때
-                // console.log('멈춤');
             isTouch=true; //멈춤
             } 
         }
@@ -329,10 +323,8 @@ function cantmoveLR(delta) {
         // console.log('mine td', mine[3]);
         // console.log('next line td', nextLine);
         if ((nextLine !== mine[0]) && (nextLine !== mine[1]) && (nextLine !== mine[2]) && (nextLine !== mine[3])) { //다음블럭이  내블럭이 아니고
-            // console.log('aa')
             // console.log(isTouch);
             if (nextLine.style.background !== 'black') { //다음블럭이 존재할때
-                // console.log('멈춤');
                 isTouch = true; //멈춤
                 // console.log(isTouch);
             }
@@ -349,7 +341,6 @@ function downblock() {
         if (i++ < 28) {
 
             if (isCanMove()) {
-                // console.log('멈춤');
                 i += 100; return;
             }
             moveDown();
