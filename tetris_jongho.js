@@ -51,6 +51,7 @@ let createPoint = [1, parseInt(22 / 2) - 2]; //게임테이블에 어디서 도�
 let blockCell = []; //currentShape초기화 하기위해 만든 것
 let time = 0;
 let score = 0;
+let shapeRotateMap = [1,0,3,2,4,6,7,8,5,10,9,12,13,14,11,16,17,18,15];
 
 //게임테이블 그리기
 function setTable() {
@@ -96,7 +97,20 @@ function lineClear(line){
         document.getElementById(`${line} ${i}`).style.background = 'black';
     }
     score+=100;
+    lineDown(line);
 
+}
+
+//윗줄 내리기
+function lineDown(line){
+    console.log(line);
+    for(i=line; i>5; i--){
+        for(var j=1; j<19; j++){
+            let before=document.getElementById(`${(i-1)} ${j}`).style.background;
+            console.log(before);
+            document.getElementById(`${i} ${j}`).style.background = before;
+        }
+    }
 }
 
 //스코어 관리
@@ -117,18 +131,19 @@ function keyDownEventHandler(e) {
     switch (e.keyCode) {
 
         case 37: setTimeout("moveLR(-1)", 0);
-            resetBlock(1);
             moveleft = true;
             break;
 
         case 39: setTimeout("moveLR(1)", 0);
-            resetBlock(-1);
             moveright = true;
             break;
-
-        case 32: setTimeout("moveFS(1)", 0);
-            resetBlock(-1);
+            
+            case 32: setTimeout("moveFS(1)", 0);
             movefast = true;
+            break;
+            
+            case 13: setTimeout("rotateShape()", 0);
+            console.log('enter 입력')
             break;
 
     }
@@ -150,19 +165,47 @@ function keyUpEventHandler(e) {
 
 
 function moveLR(delta) {
-
+    resetBlock(-delta);
     for (let h = 0; h < blockCell.length; h++) { // blockcell의 length란 4로 블록 각각의 td 위치를 의미함 
         blockCell[h][1] += delta;
     }
+    if(delta>0){
+        blockPoint[1]++;
+    }else{
+        blockPoint[1]--;
+    }
+    showShape();
+
 }
 
 
 function moveFS(delta) {
-
-    for (let h = 0; h < blockCell.length; h++) {
-        blockCell[h][0] += delta;
+    if(!isCanMove()){
+        resetBlock(-delta);
+        for (let h = 0; h < blockCell.length; h++) {
+            blockCell[h][0] += delta;
+        }
+        showShape();
     }
+
 } 
+
+function rotateShape(){
+    resetBlock();
+    console.log('here');
+    blockCell=[];
+    currentBlock = shapeRotateMap[currentBlock];
+    var rotatedShape = blockArray[currentBlock];
+    for(var i=0;i<4;i++){
+        var sy = blockPoint[0] + rotatedShape[i][0];
+        var sx = blockPoint[1] + rotatedShape[i][1];
+        console.log(blockPoint[0],blockPoint[1]);
+        blockCell.push([sy,sx]);
+    }
+    console.log('here3');
+    showShape();
+    console.log('here4');
+}
 
 
 //게임 테이블 도형 초기화
@@ -189,23 +232,6 @@ function showShape() {
         el.style.background = 'tomato';
     }
 }
-
-
-function moveDown() {
-    console.log('movedown실행중');
-    if (time++ > 3) {
-        console.log('movedown실행종료');
-        return;
-    }
-    resetBlock();
-    for (let i = 0; i < blockCell.length; i++) blockCell[i][0]++;
-    blockPoint[0]++;
-    showShape();
-    setTimeout(() => {
-        moveDown();
-    }, 100);
-}
-
 
 //시작
 function init() {
@@ -234,14 +260,14 @@ function displayNextBlock() {
         document.getElementById(String(y) + String(x)).style.background = 'tomato';
     }
 }
-
-
+//내려가기
 function moveDown() {
     resetBlock();
-    blockPoint = [1];
     for (let a = 0; a < blockCell.length; a++) {
-        blockCell[a][0] += blockPoint[0];
+        blockCell[a][0]++;
     }
+    console.log(blockPoint)
+    blockPoint[0]++;
     showShape();
 }
 
@@ -295,56 +321,24 @@ function isCanMove(){
 
 
 function downblock() {
-    // let block1;
-    // let block2;
     let i = 0;
     let nextLine;
     let isTouch = false;
     console.log(nextLine);
     let it = setInterval(() => {
         if (i++ < 28) {
-            let mine = [];
-            // block1 = document.getElementById(String(i-1)+" 10");
-            // if(i!=1){ //블록의 위치좌표는 0로 시작하지 않아서 
-            //     block1.style.background="black";
-            // }
-            // block2 = document.getElementById(String(i)+" 10");
-            // block2.style.background="white";
-            if (isTouch) {
+            if (isCanMove()) {
                 console.log('멈춤');
                 i += 100; return;
             }
-
-
             moveDown();
-            isTouch=isCanMove();
-
-
-            // for(let h=0;h<blockCell.length;h++){ // blockcell의 length란 4로 블록 각각의 td 위치를 의미함 
-            //     let currentBlock = gebi(blockCell[h][0]+i,blockCell[h][1]); //현재 블록의 위치 td값
-            //     mine.push(currentBlock);
-            //     let beforeBlock = gebi(blockCell[h][0]+i-1,blockCell[h][1]); //이전 블록의 위치
-            //     nextLine = gebi(blockCell[h][0]+i+1,blockCell[h][1]); //그좌표의 바로밑 td값
-
-            //     // currentBlock.style.background = 'tomato';
-            //     // beforeBlock.style.background='black';
-
-            //     if((nextLine!==mine[0]) && (nextLine!==mine[1]) && (nextLine!==mine[2]) && (nextLine!==mine[3])){ //다음블럭이  내블럭이 아니고
-            //         if( nextLine.style.background !=='black'){ //다음블럭이 존재할때
-            //         isTouch=true; //멈춤
-            //         } 
-            //     }
-            // }
-
-
+            
         } else {
             clearInterval(it);
             blockCell = [];
             init();
         }
     }, 100);
-
-
 }
 (function () {
     setTable();
