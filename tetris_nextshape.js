@@ -52,13 +52,8 @@ function gebi(y,x){
     return $td;
 }
 
-//게임 테이블 도형 초기화
-function resetBlock(){
-    for(let i=0;i<blockCell.length;i++){
-        let el = gebi(blockCell[i][0],blockCell[i][1]);
-        el.style.background = 'black';
-    }
-}
+
+//현재 blockCell 도형 그리기
 function showShape(){
     for(let i=0;i<blockCell.length;i++){
         let el = gebi(blockCell[i][0],blockCell[i][1]);
@@ -66,15 +61,8 @@ function showShape(){
     }
 }
 
-//시작
-function init(){
-    currentBlock='';
-    console.log('init실행');
-    displaycurrentBlock();
-    displayNextBlock();
-    downblock();
-}
-//다음 도형 보여주기
+
+//다음 도형 넥스트 테이블에 보여주기
 function displayNextBlock(){
     resetNextBlock();
     nextBlock = parseInt(Math.random() * blockArray.length);
@@ -85,15 +73,8 @@ function displayNextBlock(){
         document.getElementById(String(y)+String(x)).style.background = 'tomato';
     }
 }
-function moveDown(){
-    resetBlock();
-    blockPoint=[1];
-    for(let a=0;a<blockCell.length;a++){
-        blockCell[a][0]+=blockPoint[0];
-    }
-    showShape();
-}
-//현재 도형 그리기
+
+//시작위치에 현재 도형 생성 및 그리기
 function displaycurrentBlock(){
     currentBlock=[];
     resetBlock();
@@ -111,6 +92,14 @@ function displaycurrentBlock(){
     }
    
 }
+//현재 움직이는 도형 초기화
+function resetBlock(){
+    for(let i=0;i<blockCell.length;i++){
+        let el = gebi(blockCell[i][0],blockCell[i][1]);
+        el.style.background = 'black';
+    }
+}
+
 //다음 도형 초기화
 function resetNextBlock(){
     for(let i=0;i<4;i++)
@@ -118,7 +107,17 @@ function resetNextBlock(){
             document.getElementById(String(i)+String(j)).style.background = "rgb(14,31,49)";
 }
 
-function isCanMove(){//움직일수 있는지 즉 멈추는 지 판단
+//도형 한칸 내리기
+function moveDown(){
+    resetBlock();
+    blockPoint=[1];
+    for(let a=0;a<blockCell.length;a++){
+        blockCell[a][0]+=blockPoint[0];
+    }
+    showShape();
+}
+//움직일수 있는지 즉 멈추는 지 판단
+function isCanMove(){
     let isTouch=false;
     let mine=[];
     for(let h=0;h<blockCell.length;h++){ // blockcell의 length란 4로 블록 각각의 td 위치를 의미함 
@@ -138,6 +137,7 @@ function isCanMove(){//움직일수 있는지 즉 멈추는 지 판단
     return isTouch;
 }
 
+//도형 자동내리기
 function downblock(){
     let i=0;
     let isTouch=false;
@@ -156,6 +156,17 @@ function downblock(){
     }, 500);
     
 }
+
+
+//시작
+function init(){
+    currentBlock='';
+    console.log('init실행');
+    displaycurrentBlock();
+    displayNextBlock();
+    downblock();
+}
+
 (function(){
     setTable();
     init();
