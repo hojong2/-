@@ -32,12 +32,12 @@ let score = 0;
 let blockRotateMap = [1,0,3,2,4,6,7,8,5,10,9,12,13,14,11,16,17,18,15];
 let isGameOver=false;
 function message(){
-    alert('GameOver YourScore is '+score);
+    alert('[Game Over]\nYourScore is '+score); 
     document.getElementById("gameField").style.visibility = "hidden";
     document.getElementById("gameover").style.visibility = "visible"; 
 }
 
-function gameOver(){
+function checkGameOver(){
     if(isCanMove()){
         isGameOver=true;
     }
@@ -224,20 +224,6 @@ function showBlock() {
     }
 }
 
-//시작
-function init() {
-    if(!isGameOver){
-        currentBlock = '';
-        displaycurrentBlock();
-        gameOver();
-        downblock();
-        checkLine();
-        scoreManager();
-    }else{
-        message();
-    }
-}
-
 
 //다음 도형 보여주기
 function displayNextBlock() {
@@ -352,6 +338,20 @@ function downblock() {
         }
     }, 300);
 }
+//시작
+function init() {
+    if(!isGameOver){
+        currentBlock = '';
+        displaycurrentBlock(); //블록보이기
+        checkGameOver(); //gameover check
+        downblock();    //블록 내리기
+        checkLine();    //라인 검사
+        scoreManager(); //점수 매기기
+    }else{
+        message(); // gameover 메세지 출력
+    }
+}
+
 (function () {
     setTable();
     init();
