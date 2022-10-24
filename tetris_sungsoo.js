@@ -118,17 +118,14 @@ function keyDownEventHandler(e) {
     switch (e.keyCode) {
 
         case 37: setTimeout("moveLR(-1)", 0);
-            resetBlock(1);
             moveleft = true;
             break;
 
         case 39: setTimeout("moveLR(1)", 0);
-            resetBlock(-1);
             moveright = true;
             break;
             
             case 32: setTimeout("moveFS(1)", 0);
-            resetBlock(-1);
             movefast = true;
             break;
             
@@ -164,14 +161,20 @@ function moveLR(delta) {
     }else{
         blockPoint[1]--;
     }
+    showShape();
+
 }
 
 
 function moveFS(delta) {
-
-    for (let h = 0; h < blockCell.length; h++) {
-        blockCell[h][0] += delta;
+    if(!isCanMove()){
+        resetBlock(-delta);
+        for (let h = 0; h < blockCell.length; h++) {
+            blockCell[h][0] += delta;
+        }
+        showShape();
     }
+
 } 
 
 function rotateShape(){
@@ -311,18 +314,18 @@ function downblock() {
     console.log(nextLine);
     let it = setInterval(() => {
         if (i++ < 28) {
-            if (isTouch) {
+            if (isCanMove()) {
                 console.log('멈춤');
                 i += 100; return;
             }
             moveDown();
-            isTouch=isCanMove();
+            
         } else {
             clearInterval(it);
             blockCell = [];
             init();
         }
-    }, 200);
+    }, 100);
 }
 (function () {
     setTable();
