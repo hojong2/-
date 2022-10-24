@@ -1,26 +1,4 @@
-//전역변수
-// const blockArray = [
-//     [[2,0],[2,1],[2,2],[2,3]]
-//     [[2,2],[1,2],[1,1],[0,1]],
-//     [[1,1],[1,0],[0,2],[0,1]],
-//     [[2,1],[1,1],[1,2],[0,2]],
-//     [[1,2],[1,1],[0,1],[0,0]],
-//     [[1,2],[1,1],[0,2],[0,1]],
-//     [[2,0],[1,1],[1,0],[0,0]],
-//     [[1,1],[0,2],[0,1],[0,0]],
-//     [[2,2],[1,2],[1,1],[0,2]],
-//     [[1,2],[1,1],[1,0],[0,1]],
-//     [[3,1],[2,1],[1,1],[0,1]],
-//     [[1,3],[1,2],[1,1],[1,0]],
-//     [[2,2],[2,1],[1,1],[0,1]],
-//     [[1,0],[0,2],[0,1],[0,0]],
-//     [[2,2],[1,2],[0,2],[0,1]],
-//     [[1,2],[1,1],[1,0],[0,2]],
-//     [[2,2],[2,1],[1,2],[0,2]],
-//     [[2,2],[2,1],[2,0],[1,0]],
-//     [[2,1],[1,1],[0,1],[0,2]],
-//     [[1,2],[0,2],[0,1],[0,0]]
-// ];
+
 
 const blockArray = [
     [[2,2],[1,2],[1,1],[0,1]],
@@ -53,12 +31,16 @@ let time = 0;
 let score = 0;
 let shapeRotateMap = [1,0,3,2,4,6,7,8,5,10,9,12,13,14,11,16,17,18,15];
 let isGameOver=false;
+function message(){
+    alert('GameOver YourScore is '+score);
+    document.getElementById("gameField").style.visibility = "hidden";
+    document.getElementById("gameover").style.visibility = "visible"; 
+}
+
 function gameOver(){
     if(isCanMove()){
         isGameOver=true;
-        console.log('gameOver');
-        document.getElementById("gameField").style.visibility = "hidden";
-        document.getElementById("gameover").style.visibility = "visible"; 
+        // console.log('gameOver');
     }
 }
 //게임테이블 그리기
@@ -105,8 +87,21 @@ function lineClear(line){
         document.getElementById(`${line} ${i}`).style.background = 'black';
     }
     score+=100;
+    lineDown(line);
 
 }
+//
+function lineDown(line){
+    // console.log(line);
+    for(i=line; i>5; i--){
+        for(var j=1; j<19; j++){
+            let before=document.getElementById(`${(i-1)} ${j}`).style.background;
+            // console.log(before);
+            document.getElementById(`${i} ${j}`).style.background = before;
+        }
+    }
+}
+
 
 
 //스코어 관리
@@ -139,7 +134,7 @@ function keyDownEventHandler(e) {
             break;
             
             case 13: setTimeout("rotateShape()", 0);
-            console.log('enter 입력')
+            // console.log('enter 입력')
             break;
 
     }
@@ -161,18 +156,21 @@ function keyUpEventHandler(e) {
 
 
 function moveLR(delta) {
-    resetBlock(-delta);
-    for (let h = 0; h < blockCell.length; h++) { // blockcell의 length란 4로 블록 각각의 td 위치를 의미함 
-        blockCell[h][1] += delta;
+    if(!cantmoveLR(delta)){
+        resetBlock(-delta);
+        for (let h = 0; h < blockCell.length; h++) { // blockcell의 length란 4로 블록 각각의 td 위치를 의미함 
+            blockCell[h][1] += delta;
+        }
+        if(delta>0){
+            blockPoint[1]++;
+        }else{
+            blockPoint[1]--;
+        }
+        showShape();
     }
-    if(delta>0){
-        blockPoint[1]++;
-    }else{
-        blockPoint[1]--;
-    }
-    showShape();
 
 }
+
 
 
 function moveFS(delta) {
@@ -181,6 +179,7 @@ function moveFS(delta) {
         for (let h = 0; h < blockCell.length; h++) {
             blockCell[h][0] += delta;
         }
+        blockPoint[0]++;
         showShape();
     }
 
@@ -188,19 +187,19 @@ function moveFS(delta) {
 
 function rotateShape(){
     resetBlock();
-    console.log('here');
+    // console.log('here');
     blockCell=[];
     currentBlock = shapeRotateMap[currentBlock];
     var rotatedShape = blockArray[currentBlock];
     for(var i=0;i<4;i++){
         var sy = blockPoint[0] + rotatedShape[i][0];
         var sx = blockPoint[1] + rotatedShape[i][1];
-        console.log(blockPoint[0],blockPoint[1]);
+        // console.log(blockPoint[0],blockPoint[1]);
         blockCell.push([sy,sx]);
     }
-    console.log('here3');
+    // console.log('here3');
     showShape();
-    console.log('here4');
+    // console.log('here4');
 }
 
 
@@ -238,6 +237,8 @@ function init() {
         downblock();
         checkLine();
         scoreManager();
+    }else{
+        message();
     }
 }
 
@@ -280,7 +281,7 @@ function displaycurrentBlock() {
         el.style.background = 'tomato';
         blockCell.push([sy, sx]);
     }
-    console.log('여기')
+    // console.log('여기')
 }
 
 
@@ -312,6 +313,35 @@ function isCanMove(){
     return isTouch;
 }
 
+function cantmoveLR(delta) {
+
+    let isTouch = false;
+    let mine = [];
+    for (let h = 0; h < blockCell.length; h++) { // blockcell의 length란 4로 블록 각각의 td 위치를 의미함 
+        let currentBlock = gebi(blockCell[h][0], blockCell[h][1]); //현재 블록의 위치 td값
+        mine.push(currentBlock);
+    }
+    for (let h = 0; h < blockCell.length; h++) { // blockcell의 length란 4로 블록 각각의 td 위치를 의미함 
+        let nextLine = gebi(blockCell[h][0], blockCell[h][1] +delta); //그좌표의 바로밑 td값
+        // console.log('mine td', mine[0]);
+        // console.log('mine td', mine[1]);
+        // console.log('mine td', mine[2]);
+        // console.log('mine td', mine[3]);
+        // console.log('next line td', nextLine);
+        if ((nextLine !== mine[0]) && (nextLine !== mine[1]) && (nextLine !== mine[2]) && (nextLine !== mine[3])) { //다음블럭이  내블럭이 아니고
+            // console.log('aa')
+            // console.log(isTouch);
+            if (nextLine.style.background !== 'black') { //다음블럭이 존재할때
+                // console.log('멈춤');
+                isTouch = true; //멈춤
+                // console.log(isTouch);
+            }
+        }
+    }
+    // console.log(isTouch);
+    return isTouch;
+}
+
 
 function downblock() {
     let i = 0;
@@ -319,7 +349,7 @@ function downblock() {
         if (i++ < 28) {
 
             if (isCanMove()) {
-                console.log('멈춤');
+                // console.log('멈춤');
                 i += 100; return;
             }
             moveDown();
