@@ -52,7 +52,15 @@ let blockCell = []; //currentShape초기화 하기위해 만든 것
 let time = 0;
 let score = 0;
 let shapeRotateMap = [1,0,3,2,4,6,7,8,5,10,9,12,13,14,11,16,17,18,15];
-
+let isGameOver=false;
+function gameOver(){
+    if(isCanMove()){
+        isGameOver=true;
+        console.log('gameOver');
+        document.getElementById("gameField").style.visibility = "hidden";
+        document.getElementById("gameover").style.visibility = "visible"; 
+    }
+}
 //게임테이블 그리기
 function setTable() {
     let table = "<table id=\"gametable\">";
@@ -222,17 +230,14 @@ function showShape() {
 
 //시작
 function init() {
-    currentBlock = '';
-    console.log('init실행');
-    displaycurrentBlock();
-    displayNextBlock();
-    // move();
-    downblock();
-    checkLine();
-    scoreManager();
-    // setTimeout(() => {
-    //     init()
-    // }, 3000);
+    if(!isGameOver){
+        currentBlock = '';
+        displaycurrentBlock();
+        gameOver();
+        downblock();
+        checkLine();
+        scoreManager();
+    }
 }
 
 
@@ -253,7 +258,6 @@ function moveDown() {
     for (let a = 0; a < blockCell.length; a++) {
         blockCell[a][0]++;
     }
-    console.log(blockPoint)
     blockPoint[0]++;
     showShape();
 }
@@ -275,6 +279,7 @@ function displaycurrentBlock() {
         el.style.background = 'tomato';
         blockCell.push([sy, sx]);
     }
+    console.log('여기')
 }
 
 
@@ -309,11 +314,9 @@ function isCanMove(){
 
 function downblock() {
     let i = 0;
-    let nextLine;
-    let isTouch = false;
-    console.log(nextLine);
     let it = setInterval(() => {
         if (i++ < 28) {
+
             if (isCanMove()) {
                 console.log('멈춤');
                 i += 100; return;
@@ -325,7 +328,7 @@ function downblock() {
             blockCell = [];
             init();
         }
-    }, 100);
+    }, 300);
 }
 (function () {
     setTable();
